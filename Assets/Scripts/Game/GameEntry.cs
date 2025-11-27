@@ -32,6 +32,8 @@ namespace TowerDefence.Game
             GameInstaller.Install(serviceLocator);
             serviceLocator.Register(serviceLocator);
 
+            serviceLocator.Register(new FactoryService());
+
             var persistentGo = new GameObject("Persistent");
             var persistent = persistentGo.AddComponent<Persistent>();
             persistent.Initialize();

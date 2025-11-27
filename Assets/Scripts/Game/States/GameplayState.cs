@@ -37,6 +37,9 @@ namespace TowerDefence.Game
 
         public void OnExit()
         {
+            var factoryService = Services.Get<FactoryService>();
+            factoryService.gameplay.Clear();
+
             if (_eventBus == null)
             {
                 return;
