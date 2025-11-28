@@ -1,4 +1,5 @@
 using TowerDefence.Core;
+using TowerDefence.Data.Constants;
 using TowerDefence.Systems;
 using TowerDefence.UI;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace TowerDefence.Game
             _returnToMenuToken = _eventBus.Subscribe<ReturnToMenuRequestedEvent>(OnReturnToMenu);
 
             var uiRegistry = Services.Get<IUIRegistry>();
-            if (uiRegistry.TryGetScreen<IScreen>("GameplayHUD", out var hud))
+            if (uiRegistry.TryGetScreen<IScreen>(ScreenIds.GameplayHUD, out var hud))
             {
                 await screenRouter.PushAsync(hud);
             }
@@ -58,7 +59,7 @@ namespace TowerDefence.Game
             Time.timeScale = 0f;
 
             var uiRegistry = Services.Get<IUIRegistry>();
-            if (!uiRegistry.TryGetScreen<IScreen>("Pause", out var pauseScreen))
+            if (!uiRegistry.TryGetScreen<IScreen>(ScreenIds.Pause, out var pauseScreen))
             {
                 return;
             }
