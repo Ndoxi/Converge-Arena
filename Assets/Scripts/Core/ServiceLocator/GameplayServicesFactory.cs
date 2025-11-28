@@ -34,5 +34,12 @@ namespace TowerDefence.Core
             _managed.Add(system);
             return system;
         }
+
+        public IStateMachine CreateStateMachine()
+        {
+            var stateMachine = new StateMachine();
+            stateMachine.Init();
+            return stateMachine;
+        }
     }
 }

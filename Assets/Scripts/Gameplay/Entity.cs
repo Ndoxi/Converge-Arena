@@ -22,6 +22,7 @@ namespace TowerDefence.Gameplay
         private Stat _health;
         private IHealthSystem _healthSystem;
         private IAttackSystem _attackSystem;
+        private IStateMachine _stateMachine;
 
         public void Init(Team team,
                          Race race,
@@ -35,6 +36,7 @@ namespace TowerDefence.Gameplay
             var factory = Services.Get<FactoryService>().gameplay;
             _healthSystem = factory.CreateHealthSystem(_health);
             _attackSystem = factory.CreateAttackSystem(this, StatType.AttackSpeed);
+            _stateMachine = factory.CreateStateMachine();
         }
 
         public Stat GetStat(StatType statType)
@@ -45,6 +47,11 @@ namespace TowerDefence.Gameplay
         public void ApplyDamage(float value, IEntity attacker)
         {
             _healthSystem.TakeDamage(value);
+        }
+
+        private void Update()
+        {
+            _stateMachine?.Tick(Time.deltaTime);
         }
     }
 }
