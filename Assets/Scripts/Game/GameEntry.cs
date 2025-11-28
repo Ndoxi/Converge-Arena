@@ -1,5 +1,8 @@
 using System;
 using TowerDefence.Core;
+using TowerDefence.Gameplay.Input;
+using TowerDefence.Systems;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 namespace TowerDefence.Game
@@ -32,7 +35,11 @@ namespace TowerDefence.Game
             GameInstaller.Install(serviceLocator);
             serviceLocator.Register(serviceLocator);
 
-            serviceLocator.Register(new FactoryService());
+            var factory = new FactoryService();
+            factory.Init();
+            serviceLocator.Register(factory);
+
+            serviceLocator.RegisterLazy<ILevelBuilder, LevelBuilder>();
 
             var persistentGo = new GameObject("Persistent");
             var persistent = persistentGo.AddComponent<Persistent>();
@@ -40,6 +47,10 @@ namespace TowerDefence.Game
 
             var stateMachine = Services.Get<IStateMachine>();
             stateMachine.SetState(new BootState());
+
+            var playerInput = new PlayerInputProxy();
+            playerInput.Init();
+            serviceLocator.Register(playerInput);
         }
     }
 }

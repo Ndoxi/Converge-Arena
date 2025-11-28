@@ -13,7 +13,7 @@ namespace TowerDefence.Game
     {
         private bool _isLoading;
 
-        public void OnEnter()
+        public void OnEnter(IStateContext context = null)
         {
             LoadMenuScene();
         }

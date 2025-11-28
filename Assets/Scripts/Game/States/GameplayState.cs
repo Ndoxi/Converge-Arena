@@ -8,14 +8,18 @@ namespace TowerDefence.Game
 {
     public class GameplayState : IState
     {
+        private ILevelBuilder _levelBuilder;
         private IEventBus _eventBus;
         private IEventToken _pauseToken;
         private IEventToken _resumeToken;
         private IEventToken _gameOverToken;
         private IEventToken _returnToMenuToken;
 
-        public async void OnEnter()
+        public async void OnEnter(IStateContext context = null)
         {
+            _levelBuilder = Services.Get<ILevelBuilder>();
+            _levelBuilder.Load();
+
             var screenRouter = Services.Get<IScreenRouter>();
             screenRouter.Clear();
 
@@ -38,6 +42,8 @@ namespace TowerDefence.Game
 
         public void OnExit()
         {
+            _levelBuilder.Unload();
+
             var factoryService = Services.Get<FactoryService>();
             factoryService.gameplay.Clear();
 

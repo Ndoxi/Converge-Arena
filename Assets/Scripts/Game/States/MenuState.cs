@@ -13,7 +13,7 @@ namespace TowerDefence.Game
         private IEventBus _eventBus;
         private IEventToken _startGameToken;
 
-        public async void OnEnter()
+        public async void OnEnter(IStateContext context = null)
         {
             var screenRouter = Services.Get<IScreenRouter>();
             screenRouter.Clear();

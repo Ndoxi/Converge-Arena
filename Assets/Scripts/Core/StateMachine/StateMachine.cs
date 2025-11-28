@@ -9,7 +9,7 @@ namespace TowerDefence.Core
             // State machine doesn't need initialization
         }
 
-        public void SetState(IState newState)
+        public void SetState(IState newState, IStateContext context = null)
         {
             if (CurrentState == newState)
             {
@@ -18,7 +18,7 @@ namespace TowerDefence.Core
 
             CurrentState?.OnExit();
             CurrentState = newState;
-            CurrentState?.OnEnter();
+            CurrentState?.OnEnter(context);
         }
 
         public void Tick(float deltaTime)

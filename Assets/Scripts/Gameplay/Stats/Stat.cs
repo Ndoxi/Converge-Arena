@@ -29,17 +29,11 @@ namespace TowerDefence.Gameplay.Stats
 
         private float _value;
 
-        public Stat(float maxValue)
-        {
-            this.maxValue = maxValue;
-            _value = maxValue;
-        }
-
-        public Stat(float minValue, float maxValue)
+        public Stat(float value, float minValue, float maxValue)
         {
             this.minValue = minValue;
             this.maxValue = maxValue;
-            _value = maxValue;
+            _value = value;
         }
     }
 }

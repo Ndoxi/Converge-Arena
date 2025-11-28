@@ -7,12 +7,15 @@ namespace TowerDefence.Gameplay.Systems
 {
     public class AttackSystem : IAttackSystem, IDisposable
     {
+        public bool canAttack => Time.time < _lastAttackTime + _attackCooldown;
+
         private static readonly Collider[] _overlapBuffer = new Collider[32];
 
         private IEntity _owner;
         private readonly Stat _attackSpeedStat;
         private float _lastAttackTime;
         private float _attackCooldown;
+
 
         public AttackSystem(IEntity owner,
                             StatType attackSpeedStatType)
@@ -32,7 +35,7 @@ namespace TowerDefence.Gameplay.Systems
 
         public int TryAttack(Vector3 position, float radius, IEntity[] results)
         {
-            if (Time.time < _lastAttackTime + _attackCooldown)
+            if (!canAttack)
                 return 0;
 
             _lastAttackTime = Time.time;

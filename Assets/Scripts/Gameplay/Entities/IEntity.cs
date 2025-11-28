@@ -1,4 +1,5 @@
 using System;
+using TowerDefence.Core;
 using TowerDefence.Gameplay.Stats;
 
 namespace TowerDefence.Gameplay
@@ -11,5 +12,6 @@ namespace TowerDefence.Gameplay
         bool isAlive { get; }
         Stat GetStat(StatType statType);
         void ApplyDamage(float value, IEntity attacker);
+        void SetState<T>(IStateContext context = null) where T : IState;
     }
 }

@@ -4,7 +4,7 @@ namespace TowerDefence.Game
 {
     public class GameOverState : IState
     {
-        public void OnEnter() { }
+        public void OnEnter(IStateContext context = null) { }
 
         public void OnExit() { }
 
