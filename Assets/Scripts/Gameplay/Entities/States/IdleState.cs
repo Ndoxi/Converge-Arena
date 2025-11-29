@@ -1,5 +1,6 @@
 using TowerDefence.Core;
 using TowerDefence.Gameplay.Commands;
+using TowerDefence.Gameplay.Systems;
 using UnityEngine;
 
 namespace TowerDefence.Gameplay.States
@@ -8,11 +9,13 @@ namespace TowerDefence.Gameplay.States
     {
         private readonly IEntity _entity;
         private readonly ICommandCenter _commandCenter;
+        private readonly IAttackSystem _attackSystem;
 
-        public IdleState(IEntity entity, ICommandCenter commandCenter)
+        public IdleState(IEntity entity, ICommandCenter commandCenter, IAttackSystem attackSystem)
         {
             _entity = entity;
             _commandCenter = commandCenter;
+            _attackSystem = attackSystem;
         }
 
         public void OnEnter(IStateContext context = null) 
@@ -37,7 +40,8 @@ namespace TowerDefence.Gameplay.States
 
         private void OnAttackCommand(AttackCommand attackCommand)
         {
-            _entity.SetState<AttackState>();
+            if (_attackSystem.canAttack)
+                _entity.SetState<AttackState>();
         }
     }
 }

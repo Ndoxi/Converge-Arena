@@ -7,7 +7,7 @@ namespace TowerDefence.Gameplay.Systems
 {
     public class AttackSystem : IAttackSystem, IDisposable
     {
-        public bool canAttack => Time.time < _lastAttackTime + _attackCooldown;
+        public bool canAttack => Time.time > _lastAttackTime + _attackCooldown;
 
         private static readonly Collider[] _overlapBuffer = new Collider[32];
 
@@ -33,7 +33,7 @@ namespace TowerDefence.Gameplay.Systems
             _attackSpeedStat.onValueUpdated -= UpdateAttackCD;
         }
 
-        public int TryAttack(Vector3 position, float radius, IEntity[] results)
+        public int FindTargets(Vector3 position, float radius, IEntity[] results)
         {
             if (!canAttack)
                 return 0;
@@ -57,6 +57,18 @@ namespace TowerDefence.Gameplay.Systems
             }
 
             return count;
+        }
+
+        public void ApplyDamage(float amount, IEntity attacker, IEntity[] targetsBuffer, int targetsCount)
+        {
+            if (targetsCount == 0 || targetsBuffer.Length == 0)
+                return;
+
+            for (int i = 0; i < targetsCount; i++)
+            {
+                var target = targetsBuffer[i];
+                target.ApplyDamage(amount, attacker);
+            }
         }
 
         private void UpdateAttackCD(float value)

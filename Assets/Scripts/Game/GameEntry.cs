@@ -1,6 +1,7 @@
 using System;
 using TowerDefence.Core;
 using TowerDefence.Gameplay.Input;
+using TowerDefence.Gameplay.Systems;
 using TowerDefence.Systems;
 using Unity.Android.Gradle.Manifest;
 using UnityEngine;
@@ -51,6 +52,8 @@ namespace TowerDefence.Game
             var playerInput = new PlayerInputProxy();
             playerInput.Init();
             serviceLocator.Register(playerInput);
+
+            serviceLocator.RegisterLazy<IVFXSystem, VFXSystem>();
         }
     }
 }

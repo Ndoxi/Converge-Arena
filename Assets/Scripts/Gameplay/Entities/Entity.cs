@@ -49,9 +49,9 @@ namespace TowerDefence.Gameplay
             _stateMachine = factory.CreateEntityStateMachine();
             _states = new Dictionary<Type, IState>() 
             {
-                { typeof(IdleState), new IdleState(this, _commandCenter) },
-                { typeof(MoveState), new MoveState(this, _rigidbody, _commandCenter, GetStat(StatType.MoveSpeed)) },
-                { typeof(AttackState), new AttackState(_attackSystem) }
+                { typeof(IdleState), new IdleState(this, _commandCenter, _attackSystem) },
+                { typeof(MoveState), new MoveState(this, _rigidbody, _commandCenter, _attackSystem) },
+                { typeof(AttackState), new AttackState(this, _rigidbody, _commandCenter, _attackSystem) }
             };
 
             SetState<IdleState>();

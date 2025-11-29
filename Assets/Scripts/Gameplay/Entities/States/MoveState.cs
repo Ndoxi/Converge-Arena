@@ -1,6 +1,7 @@
 using TowerDefence.Core;
 using TowerDefence.Gameplay.Commands;
 using TowerDefence.Gameplay.Stats;
+using TowerDefence.Gameplay.Systems;
 using UnityEngine;
 
 namespace TowerDefence.Gameplay.States
@@ -10,15 +11,20 @@ namespace TowerDefence.Gameplay.States
         private readonly IEntity _entity;
         private readonly Rigidbody _rigidbody;
         private readonly ICommandCenter _commandCenter;
+        private readonly IAttackSystem _attackSystem;
         private readonly Stat _moveSpeedStat;
         private Vector2 _direction;
 
-        public MoveState(IEntity entity, Rigidbody rigidbody, ICommandCenter commandCenter, Stat moveSpeedStat)
+        public MoveState(IEntity entity,
+                         Rigidbody rigidbody,
+                         ICommandCenter commandCenter,
+                         IAttackSystem attackSystem)
         {
             _entity = entity;
             _rigidbody = rigidbody;
             _commandCenter = commandCenter;
-            _moveSpeedStat = moveSpeedStat;
+            _attackSystem = attackSystem;
+            _moveSpeedStat = _entity.GetStat(StatType.MoveSpeed);
         }
 
         public void OnEnter(IStateContext context = null) 
@@ -41,6 +47,12 @@ namespace TowerDefence.Gameplay.States
             Vector2 movementVector2D = _moveSpeedStat.value * deltaTime * _direction;
             Vector3 movementVector = new (movementVector2D.x, 0f, movementVector2D.y);
             _rigidbody.MovePosition(_rigidbody.position + movementVector);
+
+            if (movementVector != Vector3.zero)
+            {
+                Vector3 forward = movementVector.normalized;
+                _rigidbody.MoveRotation(Quaternion.LookRotation(forward));
+            }
         }
 
         private void OnMoveCommand(MoveCommand moveCommand)
@@ -53,7 +65,8 @@ namespace TowerDefence.Gameplay.States
 
         private void OnAttackCommand(AttackCommand attackCommand)
         {
-            _entity.SetState<AttackState>();
+            if (_attackSystem.canAttack)
+                _entity.SetState<AttackState>();
         }
     }
 }

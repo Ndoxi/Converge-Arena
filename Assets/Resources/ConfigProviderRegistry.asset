@@ -15,3 +15,5 @@ MonoBehaviour:
   _configs:
   - _key: EntitiesConfig
     _config: {fileID: 11400000, guid: 7f59c643c58472f4c867037c88312417, type: 2}
+  - _key: VFXConfig
+    _config: {fileID: 11400000, guid: 058d1b3b2f2ff124899f5db6d1bc0692, type: 2}
