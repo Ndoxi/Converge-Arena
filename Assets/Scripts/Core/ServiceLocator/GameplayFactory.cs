@@ -32,13 +32,12 @@ namespace TowerDefence.Core
             _managed.Clear();
         }
 
-        public IHealthSystem CreateHealthSystem(Stat healthStat)
+        public IHealthSystem CreateHealthSystem(IEntity owner, StatType healthStatType)
         {
-            return new HealthSystem(healthStat);
+            return new HealthSystem(owner.GetStat(healthStatType));
         }
 
-        public IAttackSystem CreateAttackSystem(IEntity owner,
-                                                StatType attackSpeedStatType)
+        public IAttackSystem CreateAttackSystem(IEntity owner, StatType attackSpeedStatType)
         {
             var system = new AttackSystem(owner, attackSpeedStatType);
             _managed.Add(system);

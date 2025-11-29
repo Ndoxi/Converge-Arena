@@ -4,6 +4,7 @@ using TowerDefence.Data;
 using TowerDefence.Data.Constants;
 using TowerDefence.Gameplay;
 using TowerDefence.Gameplay.Commands;
+using TowerDefence.Gameplay.States;
 using TowerDefence.Gameplay.Stats;
 using TowerDefence.Gameplay.Systems;
 
@@ -23,12 +24,14 @@ namespace TowerDefence.Systems
         public void Configure(Entity entity)
         {
             entity.Init(Team.None, Race.None, GetStats(), null);
+            entity.SetIdle();
             _teamConversionSystem.Register(entity);
         }
 
         public void ConfigurePlayer(Entity entity)
         {
             entity.Init(Team.None, Race.None, GetStats(), new PlayerCommandCenter());
+            entity.SetIdle();
         }
 
         public void Clear()

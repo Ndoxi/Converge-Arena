@@ -15,6 +15,7 @@ namespace TowerDefence.Gameplay
         IHealthSystem healthSystem { get; }
         bool isAlive { get; }
         Stat GetStat(StatType statType);
+        void SetIdle();
         void SetState<T>(IStateContext context = null) where T : IState;
     }
 }

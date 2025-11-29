@@ -15,7 +15,7 @@ namespace TowerDefence.Systems
         public void Init()
         {
             _factory = Services.Get<FactoryService>().gameplay;
-            _entityConfigurator = Services.Get<EntityConfigurator>();
+            _entityConfigurator = Services.Get<IEntityConfigurator>();
         }
 
         public void Load()

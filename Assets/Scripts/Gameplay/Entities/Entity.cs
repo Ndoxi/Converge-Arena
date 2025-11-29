@@ -6,6 +6,8 @@ using TowerDefence.Gameplay.States;
 using TowerDefence.Gameplay.Stats;
 using TowerDefence.Gameplay.Systems;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Splines;
 using static UnityEngine.EventSystems.EventTrigger;
 
 namespace TowerDefence.Gameplay
@@ -18,15 +20,15 @@ namespace TowerDefence.Gameplay
         public Team team { get; set; } 
         public Race race => _race;
         public IHealthSystem healthSystem => _healthSystem;
-        public bool isAlive => _health.value > 0;
+        public bool isAlive => _stateMachine?.CurrentState != _deathState;
 
         private Race _race;
         private Dictionary<StatType, Stat> _stats;
-        private Stat _health;
         private IHealthSystem _healthSystem;
         private IAttackSystem _attackSystem;
         private IStateMachine _stateMachine;
         private Dictionary<Type, IState> _states;
+        private DeathState _deathState;
         private ICommandCenter _commandCenter;
         private Rigidbody _rigidbody;
         private IEntity _lastAttacker;
@@ -39,23 +41,22 @@ namespace TowerDefence.Gameplay
             this.team = team;
             _race = race;
             _stats = stats;
-            _health = _stats.GetValueOrDefault(StatType.Health);
             _commandCenter = commandCenter;
 
             var factory = Services.Get<FactoryService>().gameplay;
-            _healthSystem = factory.CreateHealthSystem(_health);
+            _healthSystem = factory.CreateHealthSystem(this, StatType.Health);
             _attackSystem = factory.CreateAttackSystem(this, StatType.AttackSpeed);
 
             //Create and populate state machine
             _stateMachine = factory.CreateEntityStateMachine();
+            _deathState = new DeathState();
             _states = new Dictionary<Type, IState>() 
             {
                 { typeof(IdleState), new IdleState(this, _commandCenter, _attackSystem) },
                 { typeof(MoveState), new MoveState(this, _rigidbody, _commandCenter, _attackSystem) },
-                { typeof(AttackState), new AttackState(this, _rigidbody, _commandCenter, _attackSystem) }
+                { typeof(AttackState), new AttackState(this, _rigidbody, _commandCenter, _attackSystem) },
+                { typeof(DeathState), _deathState }
             };
-
-            SetState<IdleState>();
 
             _healthSystem.damageTaken += OnDamage;
             _healthSystem.died += OnDeath;
@@ -64,6 +65,11 @@ namespace TowerDefence.Gameplay
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+        }
+
+        public void SetIdle()
+        {
+            SetState<IdleState>();
         }
 
         public void SetState<TState>(IStateContext context = null) where TState : IState
@@ -86,6 +92,7 @@ namespace TowerDefence.Gameplay
         private void OnDestroy()
         {
             _commandCenter.Dispose();
+
             _healthSystem.damageTaken -= OnDamage;
             _healthSystem.died -= OnDeath;
         }
@@ -97,6 +104,7 @@ namespace TowerDefence.Gameplay
 
         private void OnDeath()
         {
+            SetState<DeathState>();
             died?.Invoke(this, _lastAttacker);
         }
     }

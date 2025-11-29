@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TowerDefence.Gameplay.States;
 
 namespace TowerDefence.Gameplay.Systems
 {
@@ -33,6 +34,7 @@ namespace TowerDefence.Gameplay.Systems
         {
             entity.team = attacker.team;
             entity.healthSystem.RestoreAll();
+            entity.SetIdle();
         }
     }
 }
