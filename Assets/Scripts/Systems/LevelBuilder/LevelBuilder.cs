@@ -20,20 +20,29 @@ namespace TowerDefence.Systems
 
         public void Load()
         {
-            _player = _factory.CreateGenericEntity(Vector3.zero, Quaternion.identity);
-            _entityConfigurator.ConfigurePlayer(_player);
+            _player = CreatePlayer();
         }
 
         public void Unload()
         {
-            Object.Destroy(_player);
+            if (_player != null)
+                Object.Destroy(_player);
 
             foreach (var entity in _managed)
             {
-                Object.Destroy(entity);
+                if (entity != null)
+                    Object.Destroy(entity);
             }
 
             _managed.Clear();
+        }
+
+        private Entity CreatePlayer()
+        {
+            var player = _factory.CreateGenericEntity(Vector3.zero, Quaternion.identity);
+            _entityConfigurator.ConfigurePlayer(player);
+
+            return player;
         }
     }
 }
