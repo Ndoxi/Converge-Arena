@@ -6,9 +6,6 @@ using TowerDefence.Gameplay.States;
 using TowerDefence.Gameplay.Stats;
 using TowerDefence.Gameplay.Systems;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Splines;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace TowerDefence.Gameplay
 {

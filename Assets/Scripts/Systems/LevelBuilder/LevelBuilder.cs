@@ -7,10 +7,13 @@ namespace TowerDefence.Systems
 {
     public class LevelBuilder : ILevelBuilder
     {
+        public event ILevelBuilder.PlayerSpawnedHandler playerSpawned;
+
         private GameplayFactory _factory;
         private IEntityConfigurator _entityConfigurator;
         private Entity _player;
         private readonly List<Entity> _managed = new List<Entity>(64);
+
 
         public void Init()
         {
@@ -21,6 +24,7 @@ namespace TowerDefence.Systems
         public void Load()
         {
             _player = CreatePlayer();
+            playerSpawned?.Invoke(_player);
         }
 
         public void Unload()
