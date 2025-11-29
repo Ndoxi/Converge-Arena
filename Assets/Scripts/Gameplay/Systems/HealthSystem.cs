@@ -5,7 +5,8 @@ namespace TowerDefence.Gameplay.Systems
 {
     public class HealthSystem : IHealthSystem
     {
-        public event Action onDeath;
+        public event IHealthSystem.DamageTakenHandler damageTaken;
+        public event Action died;
 
         private readonly Stat _healthStat;
 
@@ -14,15 +15,17 @@ namespace TowerDefence.Gameplay.Systems
             _healthStat = healthStat;
         }
 
-        public void TakeDamage(float amount)
+        public void TakeDamage(float amount, IEntity attacker)
         {
             if (_healthStat.value <= 0)
                 return;
 
             _healthStat.value -= amount;
 
+            damageTaken?.Invoke(attacker);
+
             if (_healthStat.value <= 0)
-                onDeath?.Invoke();
+                died?.Invoke();
         }
 
         public void RestoreAll()

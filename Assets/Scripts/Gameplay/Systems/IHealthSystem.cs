@@ -1,11 +1,16 @@
 using System;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 
 namespace TowerDefence.Gameplay.Systems
 {
     public interface IHealthSystem
     {
-        event Action onDeath;
-        void TakeDamage(float amount);
+        delegate void DamageTakenHandler(IEntity attacker);
+
+        event DamageTakenHandler damageTaken;
+        event Action died;
+        void TakeDamage(float amount, IEntity attacker);
         void RestoreAll();
     }
 }

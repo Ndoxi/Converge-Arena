@@ -42,11 +42,12 @@ namespace TowerDefence.Gameplay.Systems
 
             int hits = Physics.OverlapSphereNonAlloc(position, radius, _overlapBuffer);
             int count = 0;
-            for (int i = 0; i < hits; i++) 
+            for (int i = 0; i < hits; i++)
             {
                 var hit = _overlapBuffer[i];
-                if (hit.attachedRigidbody == null 
-                    || !hit.attachedRigidbody.TryGetComponent(out IEntity entity) 
+                if (hit.attachedRigidbody == null
+                    || !hit.attachedRigidbody.TryGetComponent(out IEntity entity)
+                    || !entity.isAlive
                     || entity.team == _owner.team)
                 {
                     continue;
@@ -67,7 +68,7 @@ namespace TowerDefence.Gameplay.Systems
             for (int i = 0; i < targetsCount; i++)
             {
                 var target = targetsBuffer[i];
-                target.ApplyDamage(amount, attacker);
+                target.healthSystem.TakeDamage(amount, attacker);
             }
         }
 

@@ -40,6 +40,8 @@ namespace TowerDefence.Game
             factory.Init();
             serviceLocator.Register(factory);
 
+            serviceLocator.RegisterLazy<ITeamConversionSystem, TeamConversionSystem>();
+            serviceLocator.RegisterLazy<IEntityConfigurator, EntityConfigurator>();
             serviceLocator.RegisterLazy<ILevelBuilder, LevelBuilder>();
 
             var persistentGo = new GameObject("Persistent");
