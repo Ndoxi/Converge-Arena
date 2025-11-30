@@ -3,11 +3,10 @@ using UnityEngine;
 
 namespace TowerDefence.Gameplay.Systems
 {
-    public interface IAttackSystem
+    public interface IAttackSystem : IDisposable
     {
         bool canAttack { get; }
-        int FindTargets(Vector3 position, float radius, IEntity[] results);
-        void ApplyDamage(float amount, IEntity attacker, IEntity[] targetsBuffer, int targetsCount);
+        void Attack(float amount, IEntity attacker, IEntity[] targetsBuffer, int targetsCount);
     }
 }
 

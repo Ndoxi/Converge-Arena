@@ -98,13 +98,14 @@ namespace TowerDefence.Gameplay
 
         private void Update()
         {
-            _commandCenter.Tick(Time.deltaTime);
-            _stateMachine.Tick(Time.deltaTime);
+            _commandCenter?.Tick(Time.deltaTime);
+            _stateMachine?.Tick(Time.deltaTime);
         }
 
         private void OnDestroy()
         {
             _commandCenter.Dispose();
+            _attackSystem.Dispose();
 
             _healthSystem.damageTaken -= OnDamage;
             _healthSystem.died -= OnDeath;

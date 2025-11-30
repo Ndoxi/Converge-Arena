@@ -1,15 +1,12 @@
-using System;
 using System.Linq;
 using TowerDefence.Gameplay.Stats;
 using UnityEngine;
 
 namespace TowerDefence.Gameplay.Systems
 {
-    public class AttackSystem : IAttackSystem, IDisposable
+    public class AttackSystem : IAttackSystem
     {
         public bool canAttack => Time.time > _lastAttackTime + _attackCooldown;
-
-        private static readonly Collider[] _overlapBuffer = new Collider[32];
 
         private IEntity _owner;
         private readonly Stat _attackSpeedStat;
@@ -33,35 +30,12 @@ namespace TowerDefence.Gameplay.Systems
             _attackSpeedStat.onValueUpdated -= UpdateAttackCD;
         }
 
-        public int FindTargets(Vector3 position, float radius, IEntity[] results)
+        public void Attack(float amount, IEntity attacker, IEntity[] targetsBuffer, int targetsCount)
         {
             if (!canAttack)
-                return 0;
-
+                return;
             _lastAttackTime = Time.time;
 
-            int hits = Physics.OverlapSphereNonAlloc(position, radius, _overlapBuffer);
-            int count = 0;
-            for (int i = 0; i < hits; i++)
-            {
-                var hit = _overlapBuffer[i];
-                if (hit.attachedRigidbody == null
-                    || !hit.attachedRigidbody.TryGetComponent(out IEntity entity)
-                    || !entity.isAlive
-                    || entity.team == _owner.team)
-                {
-                    continue;
-                }
-
-                results[count] = entity;
-                count++;
-            }
-
-            return count;
-        }
-
-        public void ApplyDamage(float amount, IEntity attacker, IEntity[] targetsBuffer, int targetsCount)
-        {
             if (targetsCount == 0 || targetsBuffer.Length == 0)
                 return;
 

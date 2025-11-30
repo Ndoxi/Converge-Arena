@@ -12,6 +12,7 @@ namespace TowerDefence.Gameplay.States
         private readonly Rigidbody _rigidbody;
         private readonly ICommandCenter _commandCenter;
         private readonly IAttackSystem _attackSystem;
+        private readonly ITargetingService _targetingService;
         private readonly IVFXSystem _vfxSystem;
         private readonly Stat _attackStat;
         private readonly Stat _attackRangeStat;
@@ -27,6 +28,7 @@ namespace TowerDefence.Gameplay.States
             _commandCenter = commandCenter;
             _attackSystem = attackSystem;
 
+            _targetingService = Services.Get<ITargetingService>();
             _vfxSystem = Services.Get<IVFXSystem>();
             _attackStat = _entity.GetStat(StatType.AttackDamage);
             _attackRangeStat = _entity.GetStat(StatType.AttackRange);
@@ -50,10 +52,15 @@ namespace TowerDefence.Gameplay.States
             var radius = _attackRangeStat.value / 2;
             Vector3 center = _rigidbody.position + _rigidbody.transform.forward * radius;
 
-            int count = _attackSystem.FindTargets(center, radius, _buffer);
-            _attackSystem.ApplyDamage(_attackStat.value, _entity, _buffer, count);
+            int count = _targetingService.FindTargets(center, radius, _buffer, QueryTargets);
+            _attackSystem.Attack(_attackStat.value, _entity, _buffer, count);
 
             _vfxSystem.PlayAttackEffect(center, radius);
+        }
+
+        private bool QueryTargets(IEntity entity)
+        {
+            return entity.team != _entity.team;
         }
     }
 }

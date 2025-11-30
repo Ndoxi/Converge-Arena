@@ -35,3 +35,7 @@ MonoBehaviour:
       value: 15
       minValue: 0
       maxValue: 1000
+    - statType: 3
+      value: 8
+      minValue: 0
+      maxValue: 100

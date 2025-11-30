@@ -47,6 +47,7 @@ namespace TowerDefence.Gameplay.Commands
             _patrolState.directionChanged += OnDirectionChanged;
 
             _brainStateMachine.Init();
+            _patrolState.Init();
             SetState<PatrolState>();
         }
 
