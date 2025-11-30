@@ -2,18 +2,18 @@ using UnityEngine;
 
 namespace TowerDefence.Gameplay.Systems
 {
-    public class SpawnPointsProvider : ISpawnPointsService
+    public class WorldPointsProvider : IWorldPointsService
     {
-        private readonly SpawnPoint _playerSpawnPoint;
+        private readonly WorldPoint _playerSpawnPoint;
 
-        public SpawnPointsProvider(SpawnPoint playerSpawnPoint)
+        public WorldPointsProvider(WorldPoint playerSpawnPoint)
         {
             _playerSpawnPoint = playerSpawnPoint;
         }
 
         public void Init() { }
 
-        public SpawnPoint GetPlayerSpawnPoint()
+        public WorldPoint GetPlayerSpawnPoint()
         {
             return _playerSpawnPoint;
         }

@@ -12,7 +12,7 @@ namespace TowerDefence.Systems
 
         private GameplayFactory _factory;
         private IEntityConfigurator _entityConfigurator;
-        private ISpawnPointsService _spawnPointsService;
+        private IWorldPointsService _spawnPointsService;
         private Entity _player;
         private readonly List<Entity> _managed = new List<Entity>(64);
 
@@ -21,7 +21,7 @@ namespace TowerDefence.Systems
         {
             _factory = Services.Get<FactoryService>().gameplay;
             _entityConfigurator = Services.Get<IEntityConfigurator>();
-            _spawnPointsService = Services.Get<ISpawnPointsService>();
+            _spawnPointsService = Services.Get<IWorldPointsService>();
         }
 
         public void Load()
