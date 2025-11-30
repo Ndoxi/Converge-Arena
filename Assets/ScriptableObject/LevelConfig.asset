@@ -9,7 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef033f8f092d7dc418e9eafc2fee5c8e, type: 3}
-  m_Name: VFXConfig
-  m_EditorClassIdentifier: Assembly-CSharp::TowerDefence.Data.VFXConfig
-  _attackPrefab: {fileID: 3747922744584529428, guid: f2ade011a6b951b4f82576a61de666b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e13649aa54d028488305d7a20571109, type: 3}
+  m_Name: LevelConfig
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefence.Data.LevelConfig
+  playersTeam: 1
+  teamDatas:
+  - team: 1
+    spawnCount: 8
+  - team: 2
+    spawnCount: 8

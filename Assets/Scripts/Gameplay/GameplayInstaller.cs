@@ -1,4 +1,5 @@
 using TowerDefence.Core;
+using TowerDefence.Data;
 using TowerDefence.Gameplay.Cameras;
 using TowerDefence.Gameplay.Systems;
 using UnityEngine;
@@ -8,7 +9,9 @@ namespace TowerDefence.Gameplay
     public class GameplayInstaller : MonoBehaviour
     {
         [SerializeField] private GameplayCamera _gameplayCamera;
-        [SerializeField] private WorldPoint _playerSpawnPoint;
+        [Header("World Points")]
+        [SerializeField] private SpawnWorldPoint[] _spawnPoints;
+        [SerializeField] private WorldPoint[] _aiWaypoints;
 
         private IServiceLocator _serviceLocator;
         private GameplayWeaver _gameplayWeaver;
@@ -30,7 +33,7 @@ namespace TowerDefence.Gameplay
             cameraService.Init();
             _serviceLocator.Register<IGameplayCameraService>(cameraService);
 
-            var worldPointsProvider = new WorldPointsProvider(_playerSpawnPoint);
+            var worldPointsProvider = new WorldPointsProvider(_spawnPoints, _aiWaypoints);
             worldPointsProvider.Init();
             _serviceLocator.Register<IWorldPointsService>(worldPointsProvider);
 

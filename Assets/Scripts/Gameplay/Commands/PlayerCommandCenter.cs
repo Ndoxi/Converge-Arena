@@ -30,7 +30,8 @@ namespace TowerDefence.Gameplay.Commands
             //Commands priority
             if (_attackInput)
                 IssueCommand(new AttackCommand());
-            IssueCommand(new MoveCommand(_moveInput));
+            else
+                IssueCommand(new MoveCommand(_moveInput));
 
             ResetFrame();
         }

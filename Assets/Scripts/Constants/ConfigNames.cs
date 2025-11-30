@@ -4,6 +4,7 @@ namespace TowerDefence.Data.Constants
     {
         public const string EntitiesConfig = "EntitiesConfig";
         public const string VFXConfig = "VFXConfig";
+        public const string LevelConfig = "LevelConfig";
     }
 }
 

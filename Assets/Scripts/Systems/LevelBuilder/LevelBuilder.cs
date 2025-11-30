@@ -1,8 +1,7 @@
-using System.Collections.Generic;
+using System.Drawing;
 using TowerDefence.Core;
-using TowerDefence.Gameplay;
-using TowerDefence.Gameplay.Systems;
-using UnityEngine;
+using TowerDefence.Data;
+using TowerDefence.Data.Constants;
 
 namespace TowerDefence.Systems
 {
@@ -10,47 +9,32 @@ namespace TowerDefence.Systems
     {
         public event ILevelBuilder.PlayerSpawnedHandler playerSpawned;
 
-        private GameplayFactory _factory;
-        private IEntityConfigurator _entityConfigurator;
-        private IWorldPointsService _spawnPointsService;
-        private Entity _player;
-        private readonly List<Entity> _managed = new List<Entity>(64);
-
+        private LevelConfig _config;
+        private IEntitySpawner _spawner;
 
         public void Init()
         {
-            _factory = Services.Get<FactoryService>().gameplay;
-            _entityConfigurator = Services.Get<IEntityConfigurator>();
-            _spawnPointsService = Services.Get<IWorldPointsService>();
+            _config = Services.Get<IConfigProvider>().Get<LevelConfig>(ConfigNames.LevelConfig);
+            _spawner = Services.Get<IEntitySpawner>();
         }
 
         public void Load()
         {
-            var spawnPoint = _spawnPointsService.GetPlayerSpawnPoint();
-            _player = CreatePlayer(spawnPoint.position, spawnPoint.rotation);
-            playerSpawned?.Invoke(_player);
+            foreach (var teamData in _config.teamDatas)
+            {
+                for (int i = 0; i < teamData.spawnCount; i++)
+                {
+                    _spawner.SpawnEntity(teamData.team);
+                }
+            }
+
+            var player = _spawner.SpawnPlayer(_config.playersTeam);
+            playerSpawned?.Invoke(player);
         }
 
         public void Unload()
         {
-            if (_player != null)
-                Object.Destroy(_player);
-
-            foreach (var entity in _managed)
-            {
-                if (entity != null)
-                    Object.Destroy(entity);
-            }
-
-            _managed.Clear();
-        }
-
-        private Entity CreatePlayer(Vector3 position, Quaternion rotation)
-        {
-            var player = _factory.CreateGenericEntity(position, rotation);
-            _entityConfigurator.ConfigurePlayer(player);
-
-            return player;
+            _spawner.Clear();
         }
     }
 }

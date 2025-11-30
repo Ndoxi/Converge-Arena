@@ -4,7 +4,7 @@ using TowerDefence.Gameplay.Stats;
 namespace TowerDefence.Data
 {
     [Serializable]
-    public class EntityStatData 
+    public struct EntityStatData 
     {
         public StatType statType;
         public float value;

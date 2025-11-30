@@ -5,8 +5,8 @@ namespace TowerDefence.Systems
 {
     public interface IEntityConfigurator : IService
     {
-        void Configure(Entity entity);
-        void ConfigurePlayer(Entity entity);
+        void Configure(Entity entity, Team team);
+        void ConfigurePlayer(Entity entity, Team team);
         void Clear();
     }
 }

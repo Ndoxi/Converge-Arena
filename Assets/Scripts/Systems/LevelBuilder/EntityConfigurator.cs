@@ -21,16 +21,16 @@ namespace TowerDefence.Systems
             _teamConversionSystem = Services.Get<ITeamConversionSystem>();
         }
 
-        public void Configure(Entity entity)
+        public void Configure(Entity entity, Team team)
         {
-            entity.Init(Team.None, Race.None, GetStats(), null);
+            entity.Init(team, Race.None, GetStats(), new AICommandCenter());
             entity.SetIdle();
             _teamConversionSystem.Register(entity);
         }
 
-        public void ConfigurePlayer(Entity entity)
+        public void ConfigurePlayer(Entity entity, Team team)
         {
-            entity.Init(Team.None, Race.None, GetStats(), new PlayerCommandCenter());
+            entity.Init(team, Race.None, GetStats(), new PlayerCommandCenter());
             entity.SetIdle();
         }
 

@@ -4,6 +4,7 @@ namespace TowerDefence.Gameplay.Systems
 {
     public interface IWorldPointsService : IService
     {
-        WorldPoint GetPlayerSpawnPoint();
+        IWorldPoint GetSpawnPoint(Team team);
+        IWorldPoint[] GetAIWaypoints();
     }
 }

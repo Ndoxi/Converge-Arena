@@ -1,21 +1,36 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using TowerDefence.Data;
 using UnityEngine;
 
 namespace TowerDefence.Gameplay.Systems
 {
     public class WorldPointsProvider : IWorldPointsService
     {
-        private readonly WorldPoint _playerSpawnPoint;
+        private readonly Dictionary<Team, SpawnWorldPoint[]> _teamSpawnPoints;
+        private readonly IWorldPoint[] _aiWaypoints;
 
-        public WorldPointsProvider(WorldPoint playerSpawnPoint)
+        public WorldPointsProvider(SpawnWorldPoint[] spawnWorldPoints, IWorldPoint[] aiWaypoints)
         {
-            _playerSpawnPoint = playerSpawnPoint;
+            _teamSpawnPoints = spawnWorldPoints
+                .GroupBy(s => s.team)
+                .ToDictionary(g => g.Key, g => g.Select(s => s).ToArray());
+
+            _aiWaypoints = aiWaypoints;
         }
 
         public void Init() { }
 
-        public WorldPoint GetPlayerSpawnPoint()
+        public IWorldPoint GetSpawnPoint(Team team)
         {
-            return _playerSpawnPoint;
+            IWorldPoint[] points = _teamSpawnPoints.GetValueOrDefault(team);
+            return points?.FirstOrDefault();
+        }
+
+        public IWorldPoint[] GetAIWaypoints()
+        {
+            return _aiWaypoints;
         }
     }
 }
