@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TowerDefence.Core;
 using TowerDefence.Gameplay;
+using TowerDefence.Gameplay.Systems;
 using UnityEngine;
 
 namespace TowerDefence.Systems
@@ -11,6 +12,7 @@ namespace TowerDefence.Systems
 
         private GameplayFactory _factory;
         private IEntityConfigurator _entityConfigurator;
+        private ISpawnPointsService _spawnPointsService;
         private Entity _player;
         private readonly List<Entity> _managed = new List<Entity>(64);
 
@@ -19,11 +21,13 @@ namespace TowerDefence.Systems
         {
             _factory = Services.Get<FactoryService>().gameplay;
             _entityConfigurator = Services.Get<IEntityConfigurator>();
+            _spawnPointsService = Services.Get<ISpawnPointsService>();
         }
 
         public void Load()
         {
-            _player = CreatePlayer();
+            var spawnPoint = _spawnPointsService.GetPlayerSpawnPoint();
+            _player = CreatePlayer(spawnPoint.position, spawnPoint.rotation);
             playerSpawned?.Invoke(_player);
         }
 
@@ -41,9 +45,9 @@ namespace TowerDefence.Systems
             _managed.Clear();
         }
 
-        private Entity CreatePlayer()
+        private Entity CreatePlayer(Vector3 position, Quaternion rotation)
         {
-            var player = _factory.CreateGenericEntity(Vector3.zero, Quaternion.identity);
+            var player = _factory.CreateGenericEntity(position, rotation);
             _entityConfigurator.ConfigurePlayer(player);
 
             return player;
