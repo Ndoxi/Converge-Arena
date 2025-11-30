@@ -8,7 +8,6 @@ namespace TowerDefence.Gameplay
     public interface IEntity
     {
         delegate void EntityDiedHandler(IEntity entity, IEntity killer);
-
         event EntityDiedHandler died;
         Team team { get; set; }
         Race race { get; }

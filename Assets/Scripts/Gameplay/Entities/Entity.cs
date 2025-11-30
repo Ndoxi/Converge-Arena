@@ -12,13 +12,29 @@ namespace TowerDefence.Gameplay
     [RequireComponent(typeof(Rigidbody))]
     public class Entity : MonoBehaviour, IEntity
     {
-        public event IEntity.EntityDiedHandler died;
+        public delegate void TeamChangedDelegate(Team team);
 
-        public Team team { get; set; } 
+        public event IEntity.EntityDiedHandler died;
+        public event TeamChangedDelegate teamChanged;
+
+        public Team team 
+        { 
+            get => _team;
+            set 
+            {
+                if (_team == value)
+                    return;
+
+                _team = value;
+                teamChanged?.Invoke(_team);
+            }
+        }
+
         public Race race => _race;
         public IHealthSystem healthSystem => _healthSystem;
         public bool isAlive => _stateMachine?.CurrentState != _deathState;
 
+        private Team _team;
         private Race _race;
         private Dictionary<StatType, Stat> _stats;
         private IHealthSystem _healthSystem;
@@ -35,7 +51,7 @@ namespace TowerDefence.Gameplay
                          Dictionary<StatType, Stat> stats, 
                          ICommandCenter commandCenter)
         {
-            this.team = team;
+            _team = team;
             _race = race;
             _stats = stats;
             _commandCenter = commandCenter;

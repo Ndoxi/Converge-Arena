@@ -23,8 +23,11 @@ namespace TowerDefence.Systems
 
         public void Configure(Entity entity, Team team)
         {
-            entity.Init(team, Race.None, GetStats(), new AICommandCenter());
+            var brain = new AIBrainCommandCenter(entity);
+            entity.Init(team, Race.None, GetStats(), brain);
             entity.SetIdle();
+            brain.Activate();
+
             _teamConversionSystem.Register(entity);
         }
 
