@@ -1,6 +1,7 @@
 using System;
 using TowerDefence.Core;
 using TowerDefence.Gameplay.Commands;
+using TowerDefence.Gameplay.Systems;
 using UnityEngine;
 
 namespace TowerDefence.Gameplay.AI
@@ -11,21 +12,19 @@ namespace TowerDefence.Gameplay.AI
 
         private readonly AIBrainCommandCenter _brain;
         private readonly Entity _entity;
-        private Vector3 _waypointPosition;
-        private readonly Steering _steering;
+        private readonly GroupAwareSteering _steering;
+        private readonly IWorldPointsService _worldPoints;
 
         public PatrolState(AIBrainCommandCenter brain, Entity entity)
         {
             _brain = brain;
             _entity = entity;
-            _steering = new Steering();
+            _steering = new GroupAwareSteering();
+            _worldPoints = Services.Get<IWorldPointsService>();
         }
 
         public void OnEnter(IStateContext context = null)
         {
-            if (context is PatrolStateTargetContext target)
-                _waypointPosition = target.position;
-
             _steering.Reset();
         }
 
@@ -33,30 +32,28 @@ namespace TowerDefence.Gameplay.AI
 
         public void Tick(float deltaTime)
         {
-            var dir = _steering.CalculateDirection(_entity, _brain.activeGroup, _waypointPosition, deltaTime);
+            Vector3 goal;
+
+            if (_brain.activeGroup != null)
+            {
+                goal = _brain.activeGroup.goal;
+            }
+            else
+            {
+                var nearest = _worldPoints?.GetNearest(_entity.transform.position);
+                if (nearest == null)
+                {
+                    _steering.Reset();
+                    directionChanged?.Invoke(Vector3.zero);
+                    return;
+                }
+
+                goal = nearest.position;
+            }
+
+            var dir = _steering.CalculateDirection(_entity, _brain.activeGroup, goal, deltaTime);
             directionChanged?.Invoke(dir);
         }
-    }
-
-    public class IdleState: IState
-    {
-        public void OnEnter(IStateContext context = null) { }
-        public void OnExit() { }
-        public void Tick(float deltaTime) { }
-    }
-
-    public class ChaseState : IState
-    {
-        private readonly AIBrainCommandCenter _brain;
-
-        public ChaseState(AIBrainCommandCenter brain)
-        {
-            _brain = brain;
-        }
-
-        public void OnEnter(IStateContext context = null) { }
-        public void OnExit() { }
-        public void Tick(float deltaTime) { }
     }
 }
 

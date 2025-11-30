@@ -59,7 +59,12 @@ namespace TowerDefence.Gameplay.Commands
         public override void Tick(float deltaTime)
         {
             _brainStateMachine.Tick(deltaTime);
-            IssueCommand(new MoveCommand(_moveDirection));
+
+            //Commands priority
+            if (_attack)
+                IssueCommand(new AttackCommand());
+            else
+                IssueCommand(new MoveCommand(_moveDirection));
         }
 
         public override void Dispose()

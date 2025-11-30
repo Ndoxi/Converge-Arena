@@ -28,9 +28,32 @@ namespace TowerDefence.Gameplay.Systems
             return points?.FirstOrDefault();
         }
 
-        public IWorldPoint[] GetAIWaypoints()
+        public IWorldPoint[] GetWaypoints()
         {
             return _aiWaypoints;
+        }
+
+        public IWorldPoint GetNearest(Vector3 position, float minDistance = 1f)
+        {
+            IWorldPoint nearestPoint = null;
+            float nearestSqrDistance = float.MaxValue;
+            foreach (var point in _aiWaypoints)
+            {
+                float sqrDistance = (point.position - position).sqrMagnitude;
+                if (sqrDistance < nearestSqrDistance && sqrDistance >= minDistance * minDistance)
+                {
+                    nearestSqrDistance = sqrDistance;
+                    nearestPoint = point;
+                }
+            }
+            return nearestPoint;
+        }
+
+        public IWorldPoint GetRandomWaypoint()
+        {
+            if (_aiWaypoints.Length == 0)
+                return null;
+            return _aiWaypoints[Random.Range(0, _aiWaypoints.Length)];
         }
     }
 }

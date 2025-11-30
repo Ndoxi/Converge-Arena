@@ -15,6 +15,7 @@ namespace TowerDefence.Gameplay
 
         private IServiceLocator _serviceLocator;
         private GameplayWeaver _gameplayWeaver;
+        private EntityGroupSystem _groupSystem;
 
         private void Awake()
         {
@@ -37,6 +38,10 @@ namespace TowerDefence.Gameplay
             worldPointsProvider.Init();
             _serviceLocator.Register<IWorldPointsService>(worldPointsProvider);
 
+            _groupSystem = new EntityGroupSystem();
+            _groupSystem.Init();
+            _serviceLocator.Register<IEntityGroupSystem>(_groupSystem);
+
             _gameplayWeaver = new GameplayWeaver();
             _gameplayWeaver.Init();
         }
@@ -46,6 +51,7 @@ namespace TowerDefence.Gameplay
             _serviceLocator.Unregister<IGameplayCameraService>();
             _serviceLocator.Unregister<IWorldPointsService>();
 
+            _groupSystem.Dispose();
             _gameplayWeaver.Dispose();
         }
     }

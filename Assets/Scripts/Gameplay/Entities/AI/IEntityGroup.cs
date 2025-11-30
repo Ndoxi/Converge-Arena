@@ -7,6 +7,7 @@ namespace TowerDefence.Gameplay.AI
     public interface IEntityGroup : IDisposable
     {
         Vector3 center { get; }
+        Vector3 goal { get; set; }
         List<Entity> entities { get; }
         void Join(Entity entity);
         void Leave(Entity entity);

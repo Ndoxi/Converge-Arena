@@ -14,6 +14,7 @@ namespace TowerDefence.Gameplay
         {
             _cameraService = Services.Get<IGameplayCameraService>();
             _levelBuilder = Services.Get<ILevelBuilder>();
+
             _levelBuilder.playerSpawned += OnPlayerSpawned;
         }
 

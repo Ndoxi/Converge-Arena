@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TowerDefence.Gameplay.AI
 {
-    public class Steering
+    public class GroupAwareSteering
     {
         private readonly float _groupGravityFactor;
         private readonly float _minGroupDistance;
@@ -12,11 +12,10 @@ namespace TowerDefence.Gameplay.AI
 
         private Vector3 _currentDirection = Vector3.zero;
 
-        public Steering(
-            float groupGravityFactor = 0.3f,
-            float minGroupDistance = 1.5f,
-            float separationForce = 10f,
-            float smoothSpeed = 5f)
+        public GroupAwareSteering(float groupGravityFactor = 0.3f,
+                                  float minGroupDistance = 1.5f,
+                                  float separationForce = 10f,
+                                  float smoothSpeed = 5f)
         {
             _groupGravityFactor = groupGravityFactor;
             _minGroupDistance = minGroupDistance;
@@ -39,9 +38,9 @@ namespace TowerDefence.Gameplay.AI
             if (toWaypoint.sqrMagnitude > 0.01f)
                 desired = toWaypoint.normalized;
 
-            Vector3 cohesion = Vector3.zero;
+            Vector3 groupForce = Vector3.zero;
             if (group != null)
-                cohesion = (group.center - position) * _groupGravityFactor;
+                groupForce = (group.center - position) * _groupGravityFactor;
 
             Vector3 separation = Vector3.zero;
             if (group != null && group.entities != null)
@@ -64,7 +63,7 @@ namespace TowerDefence.Gameplay.AI
                 }
             }
 
-            Vector3 combined = desired + cohesion + separation;
+            Vector3 combined = desired + groupForce + separation;
 
             if (combined.sqrMagnitude < 0.0001f)
             {
