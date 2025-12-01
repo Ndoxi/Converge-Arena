@@ -6,6 +6,7 @@ namespace TowerDefence.Data.Constants
     {
         public const string GameplayHUD = "GameplayHUD";
         public const string Pause = "Pause";
+        public const string GameOver = "GameOver";
     }
 }
 

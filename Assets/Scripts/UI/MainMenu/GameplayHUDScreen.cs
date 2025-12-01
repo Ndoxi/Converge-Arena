@@ -1,5 +1,5 @@
-using TowerDefence.Core;
-using TowerDefence.Gameplay.Input;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,37 +7,34 @@ namespace TowerDefence.UI
 {
     public class GameplayHUDScreen : BaseScreen
     {
+        public event Action attackPressed;
+        public event Action pauseRequested;
+        public Joystick moveInputJoystick => _moveInputJoystick;
+
         [SerializeField] private Joystick _moveInputJoystick;
         [SerializeField] private Button _attackButton;
-        private PlayerInputProxy _proxy;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            _proxy = Services.Get<PlayerInputProxy>();
-        }
+        [SerializeField] private Button _pauseButton;
 
         private void OnEnable()
         {
             _attackButton.onClick.AddListener(OnAttackPressed);
+            _pauseButton.onClick.AddListener(OnPauseRequested);
         }
 
         private void OnDisable()
         {
             _attackButton.onClick.RemoveListener(OnAttackPressed);
+            _pauseButton.onClick.RemoveListener(OnPauseRequested);
         }
 
         private void OnAttackPressed()
         {
-            _proxy.SetAttack();
+            attackPressed?.Invoke();
         }
 
-        private void Update()
+        private void OnPauseRequested()
         {
-            var horizontal = _moveInputJoystick.Horizontal;
-            var vertical = _moveInputJoystick.Vertical;
-            _proxy.SetMove(new Vector2(horizontal, vertical));
+            pauseRequested?.Invoke();
         }
     }
 }

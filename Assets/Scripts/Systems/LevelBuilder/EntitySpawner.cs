@@ -8,6 +8,9 @@ namespace TowerDefence.Systems
 {
     public class EntitySpawner : IEntitySpawner
     {
+        public event IEntitySpawner.EntitySpawnedHandler playerSpawned;
+        public event IEntitySpawner.EntitySpawnedHandler entitySpawned;
+
         private readonly List<Entity> _managed = new List<Entity>(64);
         private GameplayFactory _factory;
         private IEntityConfigurator _entityConfigurator;
@@ -38,6 +41,7 @@ namespace TowerDefence.Systems
             _entityConfigurator.ConfigurePlayer(player, team);
             _managed.Add(player);
 
+            playerSpawned?.Invoke(player);
             return player;
         }
 
@@ -48,6 +52,7 @@ namespace TowerDefence.Systems
             _entityConfigurator.Configure(entity, team);
             _managed.Add(entity);
 
+            entitySpawned?.Invoke(entity);
             return entity;
         }
 

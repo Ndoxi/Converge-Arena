@@ -31,13 +31,7 @@ namespace TowerDefence.Systems
                 throw new ArgumentException("Scene name cannot be null or empty.", nameof(sceneName));
             }
 
-            if (_loadingScenes.Contains(sceneName))
-            {
-                Debug.LogWarning($"Scene '{sceneName}' is already being loaded.");
-                return;
-            }
-
-            if (mode == LoadSceneMode.Single && _loadedScenes.Contains(sceneName))
+            if (mode != LoadSceneMode.Single && _loadedScenes.Contains(sceneName))
             {
                 Debug.LogWarning($"Scene '{sceneName}' is already loaded.");
                 return;

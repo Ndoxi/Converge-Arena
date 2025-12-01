@@ -7,6 +7,8 @@ namespace TowerDefence.Gameplay.Systems
 {
     public class TeamConversionSystem : ITeamConversionSystem
     {
+        public event ITeamConversionSystem.EntityConversionHandler entityConverted;
+
         private readonly List<IEntity> _managed = new List<IEntity>(64);
 
         public void Init() { }
@@ -34,9 +36,14 @@ namespace TowerDefence.Gameplay.Systems
 
         private void ConvertEntity(IEntity entity, IEntity attacker)
         {
+            Team oldTeam = entity.team;
+            Team newTeam = attacker.team;
+
             entity.team = attacker.team;
             entity.healthSystem.RestoreAll();
             entity.SetIdle();
+
+            entityConverted?.Invoke(entity, oldTeam, newTeam);
         }
     }
 }

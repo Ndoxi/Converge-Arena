@@ -114,6 +114,7 @@ namespace TowerDefence.Gameplay
             _commandCenter.Dispose();
             _attackSystem.Dispose();
             _entityDecorator.Dispose();
+            _stateMachine.SetState(null);
 
             _healthSystem.damageTaken -= OnDamage;
             _healthSystem.died -= OnDeath;

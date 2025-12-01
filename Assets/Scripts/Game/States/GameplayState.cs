@@ -3,6 +3,7 @@ using TowerDefence.Data.Constants;
 using TowerDefence.Systems;
 using TowerDefence.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TowerDefence.Game
 {
@@ -67,6 +68,7 @@ namespace TowerDefence.Game
             var uiRegistry = Services.Get<IUIRegistry>();
             if (!uiRegistry.TryGetScreen<IScreen>(ScreenIds.Pause, out var pauseScreen))
             {
+                Debug.LogWarning($"Screen with id='{ScreenIds.Pause}' not found.");
                 return;
             }
 
@@ -82,7 +84,20 @@ namespace TowerDefence.Game
             await screenRouter.HideModalAsync();
         }
 
-        private async void OnGameOver(GameOverEvent evt){}
+        private async void OnGameOver(GameOverEvent evt)
+        {
+            Time.timeScale = 0f;
+
+            var uiRegistry = Services.Get<IUIRegistry>();
+            if (!uiRegistry.TryGetScreen<IScreen>(ScreenIds.GameOver, out var gameOver))
+            {
+                Debug.LogWarning($"Screen with id='{ScreenIds.GameOver}' not found.");
+                return;
+            }
+
+            var screenRouter = Services.Get<IScreenRouter>();
+            await screenRouter.ShowModalAsync(gameOver);
+        }
 
         private async void OnReturnToMenu(ReturnToMenuRequestedEvent evt)
         {
@@ -90,7 +105,7 @@ namespace TowerDefence.Game
 
             var sceneLoader = Services.Get<ISceneLoader>();
             var config = Services.Get<GameConfig>();
-            await sceneLoader.LoadSceneAsync(config.MenuSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            await sceneLoader.LoadSceneAsync(config.MenuSceneName, LoadSceneMode.Single);
 
             var stateMachine = Services.Get<IStateMachine>();
             stateMachine.SetState(new MenuState());

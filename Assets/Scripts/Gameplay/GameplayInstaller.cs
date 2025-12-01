@@ -2,6 +2,7 @@ using TowerDefence.Core;
 using TowerDefence.Data;
 using TowerDefence.Gameplay.Cameras;
 using TowerDefence.Gameplay.Systems;
+using TowerDefence.Systems;
 using UnityEngine;
 
 namespace TowerDefence.Gameplay
@@ -30,6 +31,11 @@ namespace TowerDefence.Gameplay
 
         private void CreateContext()
         {
+            _serviceLocator.RegisterLazy<IGroupGoalSystem, RandomGroupGoalSystem>();
+            _serviceLocator.RegisterLazy<IEntitySpawner, EntitySpawner>();
+            _serviceLocator.RegisterLazy<ILevelBuilder, LevelBuilder>();
+            _serviceLocator.RegisterLazy<IMatchStateService, MatchStateService>();
+
             var cameraService = new GameplayCameraService(_gameplayCamera);
             cameraService.Init();
             _serviceLocator.Register<IGameplayCameraService>(cameraService);
@@ -48,8 +54,13 @@ namespace TowerDefence.Gameplay
 
         private void ClearContext()
         {
+            _serviceLocator.Unregister<IGroupGoalSystem>();
+            _serviceLocator.Unregister<IEntitySpawner>();
+            _serviceLocator.Unregister<ILevelBuilder>();
             _serviceLocator.Unregister<IGameplayCameraService>();
             _serviceLocator.Unregister<IWorldPointsService>();
+            _serviceLocator.Unregister<IMatchStateService>();
+            _serviceLocator.Unregister<IEntityGroupSystem>();
 
             _groupSystem.Dispose();
             _gameplayWeaver.Dispose();

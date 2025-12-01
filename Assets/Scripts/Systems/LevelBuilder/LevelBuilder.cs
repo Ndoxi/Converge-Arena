@@ -7,8 +7,6 @@ namespace TowerDefence.Systems
 {
     public class LevelBuilder : ILevelBuilder
     {
-        public event ILevelBuilder.PlayerSpawnedHandler playerSpawned;
-
         private LevelConfig _config;
         private IEntitySpawner _spawner;
 
@@ -29,7 +27,6 @@ namespace TowerDefence.Systems
             }
 
             var player = _spawner.SpawnPlayer(_config.playersTeam);
-            playerSpawned?.Invoke(player);
         }
 
         public void Unload()
