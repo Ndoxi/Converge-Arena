@@ -33,7 +33,7 @@ namespace TowerDefence.Gameplay.Stats
         {
             this.minValue = minValue;
             this.maxValue = maxValue;
-            _value = value;
+            _value = Mathf.Clamp(value, minValue, maxValue);
         }
     }
 }

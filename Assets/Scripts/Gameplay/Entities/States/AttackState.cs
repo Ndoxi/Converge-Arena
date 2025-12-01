@@ -16,7 +16,7 @@ namespace TowerDefence.Gameplay.States
         private readonly IVFXSystem _vfxSystem;
         private readonly Stat _attackStat;
         private readonly Stat _attackRangeStat;
-        private readonly IEntity[] _buffer = new IEntity[32];
+        private readonly Entity[] _buffer = new Entity[32];
 
         public AttackState(IEntity entity,
                            Rigidbody rigidbody,
@@ -36,6 +36,9 @@ namespace TowerDefence.Gameplay.States
 
         public void OnEnter(IStateContext context = null)
         {
+            if (context is AttackCommand command && command.direction != Vector2.zero)  
+                _rigidbody.rotation = Quaternion.LookRotation(new Vector3(command.direction.x, 0, command.direction.y));
+
             PerformAttack();
             _entity.SetState<IdleState>();
         }
@@ -60,7 +63,7 @@ namespace TowerDefence.Gameplay.States
 
         private bool QueryTargets(IEntity entity)
         {
-            return entity.team != _entity.team;
+            return _targetingService.IsEnemy(_entity, entity);
         }
     }
 }

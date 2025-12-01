@@ -47,7 +47,7 @@ namespace TowerDefence.Systems
             var stats = new Dictionary<StatType, Stat>();
             foreach (var statData in _config.entityData.stats)
             {
-                stats.Add(statData.statType, new Stat(statData.value, statData.minValue, statData.minValue));
+                stats.Add(statData.statType, new Stat(statData.value, statData.minValue, statData.maxValue));
             }
 
             return stats;

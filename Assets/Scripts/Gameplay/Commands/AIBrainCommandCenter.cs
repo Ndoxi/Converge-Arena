@@ -15,10 +15,12 @@ namespace TowerDefence.Gameplay.Commands
         private readonly IStateMachine _brainStateMachine;
         private readonly PatrolState _patrolState;
         private readonly ChaseState _chaseState;
+        private readonly AttackState _attackState;
         private readonly Dictionary<Type, IState> _states;
         private readonly IEntityGroupSystem _groupSystem;
         private Vector2 _moveDirection;
         private bool _attack;
+        private Vector2 _attackDirection;
 
         public AIBrainCommandCenter(Entity entity)
         {
@@ -27,13 +29,15 @@ namespace TowerDefence.Gameplay.Commands
             var factory = Services.Get<FactoryService>().gameplay;
 
             _brainStateMachine = factory.CreateEntityStateMachine();
-            _patrolState = new PatrolState(this, _entity);
-            _chaseState = new ChaseState(this);
-
+            var steering = new GroupAwareSteering();
+            _patrolState = new PatrolState(this, _entity, steering);
+            _chaseState = new ChaseState(this, _entity, steering);
+            _attackState = new AttackState(this, _entity);
             _states = new Dictionary<Type, IState>()
             {
                 { typeof(PatrolState), _patrolState },
                 { typeof(ChaseState), _chaseState },
+                { typeof(AttackState), _attackState },
             };
 
             _groupSystem = Services.Get<IEntityGroupSystem>();
@@ -45,9 +49,13 @@ namespace TowerDefence.Gameplay.Commands
 
             _entity.teamChanged += UpdateGroup;
             _patrolState.directionChanged += OnDirectionChanged;
+            _chaseState.directionChanged += OnDirectionChanged;
+            _attackState.attack += OnAttack;
 
             _brainStateMachine.Init();
             _patrolState.Init();
+            _chaseState.Init();
+            _attackState.Init();
             SetState<PatrolState>();
         }
 
@@ -63,15 +71,19 @@ namespace TowerDefence.Gameplay.Commands
 
             //Commands priority
             if (_attack)
-                IssueCommand(new AttackCommand());
+                IssueCommand(new AttackCommand(_attackDirection));
             else
                 IssueCommand(new MoveCommand(_moveDirection));
+
+            ResetFrame();
         }
 
         public override void Dispose()
         {
             _entity.teamChanged -= UpdateGroup;
             _patrolState.directionChanged -= OnDirectionChanged;
+            _chaseState.directionChanged -= OnDirectionChanged;
+            _attackState.attack -= OnAttack;
         }
 
         private void UpdateGroup(Team newTeam)
@@ -84,6 +96,19 @@ namespace TowerDefence.Gameplay.Commands
         private void OnDirectionChanged(Vector3 direction)
         {
             _moveDirection = new Vector2(direction.x, direction.z);
+        }
+
+        private void OnAttack(Vector2 direction)
+        {
+            _attack = true;
+            _attackDirection = direction;
+        }
+
+        private void ResetFrame()
+        {
+            _moveDirection = Vector2.zero;
+            _attack = false;
+            _attackDirection = Vector2.zero;
         }
     }
 }

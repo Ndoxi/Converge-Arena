@@ -16,14 +16,14 @@ namespace TowerDefence.Gameplay.AI
         private readonly GroupAwareSteering _steering;
         private readonly IWorldPointsService _worldPoints;
         private readonly ITargetingService _targetingService;
-        private static readonly IEntity[] _buffer = new IEntity[32];
+        private static readonly Entity[] _buffer = new Entity[32];
         private Stat _visionRange; 
 
-        public PatrolState(AIBrainCommandCenter brain, Entity entity)
+        public PatrolState(AIBrainCommandCenter brain, Entity entity, GroupAwareSteering steering)
         {
             _brain = brain;
             _entity = entity;
-            _steering = new GroupAwareSteering();
+            _steering = steering;
             _worldPoints = Services.Get<IWorldPointsService>();
             _targetingService = Services.Get<ITargetingService>();
         }
@@ -76,7 +76,7 @@ namespace TowerDefence.Gameplay.AI
 
         private bool QueryTargets(IEntity entity)
         {
-            return entity.team != _entity.team;
+            return _targetingService.IsEnemy(_entity, entity);
         }
     }
 }

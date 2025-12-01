@@ -9,7 +9,7 @@ namespace TowerDefence.Gameplay.Systems
 
         public void Init() { }
 
-        public int FindTargets(Vector3 position, float radius, IEntity[] results, Predicate<IEntity> query = null)
+        public int FindTargets(Vector3 position, float radius, Entity[] results, Predicate<Entity> query = null)
         {
             int hits = Physics.OverlapSphereNonAlloc(position, radius, _overlapBuffer);
             int count = 0;
@@ -17,7 +17,7 @@ namespace TowerDefence.Gameplay.Systems
             {
                 var hit = _overlapBuffer[i];
                 if (hit.attachedRigidbody == null
-                    || !hit.attachedRigidbody.TryGetComponent(out IEntity entity)
+                    || !hit.attachedRigidbody.TryGetComponent(out Entity entity)
                     || !entity.isAlive
                     || (query != null && !query.Invoke(entity)))
                 {
@@ -29,6 +29,28 @@ namespace TowerDefence.Gameplay.Systems
                 count++;
             }
             return count;
+        }
+
+        public Entity FindClosest(Vector3 position, Entity[] entities, int count)
+        {
+            Entity closest = null;
+            float closestDistanceSqr = float.MaxValue;
+            for (int i = 0; i < count; i++)
+            {
+                var entity = entities[i];
+                float distanceSqr = (entity.transform.position - position).sqrMagnitude;
+                if (distanceSqr < closestDistanceSqr)
+                {
+                    closestDistanceSqr = distanceSqr;
+                    closest = entity;
+                }
+            }
+            return closest;
+        }
+
+        public bool IsEnemy(IEntity entityA, IEntity entityB)
+        {
+            return entityA.team != entityB.team;
         }
     }
 }

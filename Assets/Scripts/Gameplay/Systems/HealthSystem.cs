@@ -1,6 +1,6 @@
 using System;
 using TowerDefence.Gameplay.Stats;
-using UnityEngine.Windows.Speech;
+using UnityEngine;
 
 namespace TowerDefence.Gameplay.Systems
 {
@@ -22,7 +22,6 @@ namespace TowerDefence.Gameplay.Systems
                 return;
 
             _healthStat.value -= amount;
-
             damageTaken?.Invoke(attacker);
 
             if (_healthStat.value <= 0)

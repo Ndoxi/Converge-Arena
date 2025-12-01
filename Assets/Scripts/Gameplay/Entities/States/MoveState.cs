@@ -61,7 +61,7 @@ namespace TowerDefence.Gameplay.States
 
             Vector2 movementVector2D = _moveSpeedStat.value * _direction;
             var movementVector = new Vector3(movementVector2D.x, 0f, movementVector2D.y);
-            _rigidbody.linearVelocity = movementVector;
+            _rigidbody.AddForce(movementVector - _rigidbody.linearVelocity, ForceMode.VelocityChange);
 
             if (_direction.sqrMagnitude > 0.01f)
             {
@@ -78,7 +78,7 @@ namespace TowerDefence.Gameplay.States
         private void OnAttackCommand(AttackCommand attackCommand)
         {
             if (_attackSystem.canAttack)
-                _entity.SetState<AttackState>();
+                _entity.SetState<AttackState>(attackCommand);
         }
     }
 }

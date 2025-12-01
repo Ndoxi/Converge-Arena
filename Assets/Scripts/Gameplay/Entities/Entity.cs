@@ -65,7 +65,7 @@ namespace TowerDefence.Gameplay
             _deathState = new DeathState();
             _states = new Dictionary<Type, IState>() 
             {
-                { typeof(IdleState), new IdleState(this, _commandCenter, _attackSystem) },
+                { typeof(IdleState), new IdleState(this, _rigidbody, _commandCenter, _attackSystem) },
                 { typeof(MoveState), new MoveState(this, _rigidbody, _commandCenter, _attackSystem) },
                 { typeof(AttackState), new AttackState(this, _rigidbody, _commandCenter, _attackSystem) },
                 { typeof(DeathState), _deathState }
