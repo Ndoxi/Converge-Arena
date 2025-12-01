@@ -4,7 +4,6 @@ using TowerDefence.Data;
 using TowerDefence.Data.Constants;
 using TowerDefence.Gameplay;
 using TowerDefence.Gameplay.Commands;
-using TowerDefence.Gameplay.States;
 using TowerDefence.Gameplay.Stats;
 using TowerDefence.Gameplay.Systems;
 
@@ -24,8 +23,13 @@ namespace TowerDefence.Systems
         public void Configure(Entity entity, Team team)
         {
             var brain = new AIBrainCommandCenter(entity);
-            entity.Init(team, Race.None, GetStats(), brain);
+
+            var decorator = new EntityDecorator();
+            decorator.Init(entity);
+
+            entity.Init(team, Race.None, GetStats(), brain, decorator);
             entity.SetIdle();
+            decorator.Decorate();
             brain.Activate();
 
             _teamConversionSystem.Register(entity);
@@ -33,8 +37,12 @@ namespace TowerDefence.Systems
 
         public void ConfigurePlayer(Entity entity, Team team)
         {
-            entity.Init(team, Race.None, GetStats(), new PlayerCommandCenter());
+            var decorator = new PlayerEntityDecorator();
+            decorator.Init(entity);
+
+            entity.Init(team, Race.None, GetStats(), new PlayerCommandCenter(), decorator);
             entity.SetIdle();
+            decorator.Decorate();
         }
 
         public void Clear()

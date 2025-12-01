@@ -45,7 +45,7 @@ namespace TowerDefence.Gameplay.Commands
 
         public void Activate()
         {
-            UpdateGroup(_entity.team);
+            UpdateGroup(_entity);
 
             _entity.teamChanged += UpdateGroup;
             _patrolState.directionChanged += OnDirectionChanged;
@@ -86,11 +86,11 @@ namespace TowerDefence.Gameplay.Commands
             _attackState.attack -= OnAttack;
         }
 
-        private void UpdateGroup(Team newTeam)
+        private void UpdateGroup(Entity entity)
         {
-            activeGroup?.Leave(_entity);
-            activeGroup = _groupSystem.GetOrCreateGroup(newTeam);
-            activeGroup.Join(_entity);
+            activeGroup?.Leave(entity);
+            activeGroup = _groupSystem.GetOrCreateGroup(entity.team);
+            activeGroup.Join(entity);
         }
 
         private void OnDirectionChanged(Vector3 direction)

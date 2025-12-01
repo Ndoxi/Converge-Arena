@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2981758771226834797}
   - component: {fileID: 3977246253436340677}
+  - component: {fileID: 1607506765829929344}
   - component: {fileID: 846534067976550970}
   m_Layer: 0
   m_Name: Entity
@@ -47,6 +48,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c2297b6efaad14792a1b58ff2f96d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefence.Gameplay.Entity
+--- !u!114 &1607506765829929344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 16737256229797155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66add44393c28324dabd3f6abafa0100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefence.Gameplay.EntityView
+  _meshRenderer: {fileID: 3535626391751435877}
 --- !u!54 &846534067976550970
 Rigidbody:
   m_ObjectHideFlags: 0

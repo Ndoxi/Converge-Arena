@@ -5,14 +5,15 @@ using TowerDefence.Gameplay.Commands;
 using TowerDefence.Gameplay.States;
 using TowerDefence.Gameplay.Stats;
 using TowerDefence.Gameplay.Systems;
+using TowerDefence.Systems;
 using UnityEngine;
 
 namespace TowerDefence.Gameplay
 {
-    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(EntityView), typeof(Rigidbody))]
     public class Entity : MonoBehaviour, IEntity
     {
-        public delegate void TeamChangedDelegate(Team team);
+        public delegate void TeamChangedDelegate(Entity entity);
 
         public event IEntity.EntityDiedHandler died;
         public event TeamChangedDelegate teamChanged;
@@ -26,13 +27,14 @@ namespace TowerDefence.Gameplay
                     return;
 
                 _team = value;
-                teamChanged?.Invoke(_team);
+                teamChanged?.Invoke(this);
             }
         }
 
         public Race race => _race;
         public IHealthSystem healthSystem => _healthSystem;
         public bool isAlive => _stateMachine?.CurrentState != _deathState;
+        public EntityView view => _view;
 
         private Team _team;
         private Race _race;
@@ -43,18 +45,22 @@ namespace TowerDefence.Gameplay
         private Dictionary<Type, IState> _states;
         private DeathState _deathState;
         private ICommandCenter _commandCenter;
+        private IEntityDecorator _entityDecorator;
+        private EntityView _view;
         private Rigidbody _rigidbody;
         private IEntity _lastAttacker;
 
         public void Init(Team team,
                          Race race,
                          Dictionary<StatType, Stat> stats, 
-                         ICommandCenter commandCenter)
+                         ICommandCenter commandCenter, 
+                         IEntityDecorator entityDecorator)
         {
             _team = team;
             _race = race;
             _stats = stats;
             _commandCenter = commandCenter;
+            _entityDecorator = entityDecorator;
 
             var factory = Services.Get<FactoryService>().gameplay;
             _healthSystem = factory.CreateHealthSystem(this, StatType.Health);
@@ -77,6 +83,7 @@ namespace TowerDefence.Gameplay
 
         private void Awake()
         {
+            _view = GetComponent<EntityView>();
             _rigidbody = GetComponent<Rigidbody>();
         }
 
@@ -106,6 +113,7 @@ namespace TowerDefence.Gameplay
         {
             _commandCenter.Dispose();
             _attackSystem.Dispose();
+            _entityDecorator.Dispose();
 
             _healthSystem.damageTaken -= OnDamage;
             _healthSystem.died -= OnDeath;

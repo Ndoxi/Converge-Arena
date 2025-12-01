@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33fb75fde8549dd47a6e87007c18df0a, type: 3}
+  m_Name: DecoratorConfig
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefence.Data.DecoratorConfig
+  _playerHighlightPrefab: {fileID: 3618002895282780956, guid: 6e519ad92ea211c479fbee09b33f69f6, type: 3}
+  _teamDecorationDatas:
+  - team: 1
+    material: {fileID: 2100000, guid: 249ce1aa7293e724ba8732bf4cc25a7d, type: 2}
+  - team: 2
+    material: {fileID: 2100000, guid: 549caf5ded9bc98498ad209cdc16a716, type: 2}

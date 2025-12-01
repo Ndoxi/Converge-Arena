@@ -19,3 +19,5 @@ MonoBehaviour:
     _config: {fileID: 11400000, guid: 058d1b3b2f2ff124899f5db6d1bc0692, type: 2}
   - _key: LevelConfig
     _config: {fileID: 11400000, guid: 8a2ee7dce304317409d794569e548a56, type: 2}
+  - _key: DecoratorConfig
+    _config: {fileID: 11400000, guid: 33814a9f203f0604eb4646c2b26ef3c8, type: 2}

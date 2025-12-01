@@ -13,7 +13,6 @@ namespace TowerDefence.Systems
         private IEntityConfigurator _entityConfigurator;
         private IWorldPointsService _worldPointsService;
 
-
         public void Init()
         {
             _factory = Services.Get<FactoryService>().gameplay;
