@@ -45,7 +45,7 @@ namespace TowerDefence.Gameplay.States
 
         private void HandleMovement(float dealtaTime)
         {
-            _rigidbody.AddForce(-_rigidbody.angularVelocity, ForceMode.VelocityChange);
+            _rigidbody.AddForce(-_rigidbody.linearVelocity, ForceMode.VelocityChange);
         }
 
         private void OnMoveCommand(MoveCommand moveCommand)
